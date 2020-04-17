@@ -7,6 +7,8 @@ function at = at_unified(X, varargin)
 % or on fitting ATs to inter-node delays obtained using
 % cross-correlation of the derivative signal (power < inf).
 %
+% at = at_unified(X, NAME-VALUE PAIRS)
+%
 % INPUTS:
 %              X: TMVs or EPs [numNodes x numTimesteps].
 %                 The positive slope is detected, so EPs must be inverted.
@@ -63,6 +65,11 @@ function at = at_unified(X, varargin)
 %
 % OUTPUT:
 %             at: ATs in samples (1-based indexing) [numNodes x 1]
+% 
+% Copyright 2020 Steffen Schuler
+% Institute of Biomedical Engineering
+% Karlsruhe Institute of Technology
+% www.ibt.kit.edu
 
 %% Parse inputs
 
