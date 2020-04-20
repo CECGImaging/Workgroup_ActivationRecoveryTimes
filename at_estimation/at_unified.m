@@ -15,7 +15,7 @@ function at = at_unified(X, varargin)
 %
 %                 NAME-VALUE PAIRS:
 %
-%   'upsampling': Upsampling factor.
+%   'upsampling': Temporal upsampling factor.
 %
 %   'derivative': Type of derivative to be used:
 %                 't':  temporal,
