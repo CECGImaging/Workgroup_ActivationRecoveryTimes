@@ -36,9 +36,9 @@ if ~exist(gmsh, 'file')
 end
 
 if optimizeNetgen
-    system(sprintf('%s %s -3 -order 1 -format vtk -v 4 -clmax %.3f -optimize_netgen -optimize_threshold %.3f', gmsh, geofile, clmax, optimizeThreshold));
+    system(sprintf('''%s'' %s -3 -order 1 -format vtk -v 4 -clmax %.3f -optimize_netgen -optimize_threshold %.3f', gmsh, geofile, clmax, optimizeThreshold));
 else
-    system(sprintf('%s %s -3 -order 1 -format vtk -v 4 -clmax %.3f -optimize_threshold %.3f', gmsh, geofile, clmax, optimizeThreshold));
+    system(sprintf('''%s'' %s -3 -order 1 -format vtk -v 4 -clmax %.3f -optimize_threshold %.3f', gmsh, geofile, clmax, optimizeThreshold));
 end
 
 vtkfile = [tmpdir '/' geoname '.vtk'];
