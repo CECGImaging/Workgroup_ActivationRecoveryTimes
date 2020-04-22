@@ -2,16 +2,16 @@ addpath(genpath('..'));
 
 %% Load input
 
-% heart = vtkRead('geometry/heart_res1.ply');
-load('geometry/heart_res1.mat');
+% heart = vtkRead('data/geometry/heart_res1.ply');
+load('data/geometry/heart_res1.mat');
 
 % L = Laplacian_transmural(heart);
-load('reguMat/L_transmural.mat');
+load('data/reguMat/L_transmural.mat');
 
-A = load('transferMat/A_tmv_res1.mat');
+A = load('data/transferMat/A_tmv_res1.mat');
 A = A.A_tmv;
 
-X_true = load('signals/lvLateral/tmv_res1.mat');
+X_true = load('data/signals/lvLateral/tmv_res1.mat');
 X_true = double(X_true.tmv);
 at_true = at_unified(X_true, 'upsampling',10, 'sigma',1, 'power',inf);
 
@@ -36,7 +36,7 @@ at_stepFun = at_unified(X, 'upsampling',upsampling, 'sigma',sigma, 'power',inf, 
 at_corr_t  = at_unified(X, 'upsampling',upsampling, 'sigma',sigma, 'power',1, 'mesh',heart, 'nodePairDist',2, 'regression','lad');
 at_corr_st = at_unified(X, 'upsampling',upsampling, 'sigma',sigma, 'power',1, 'derivative','st', 'mesh',heart, 'lambda',lambda, 'nodePairDist',2, 'regression','lad');
 
-% Visualization
+%% Visualization
 
 limits = [min(at_true) max(at_true)];
 numSteps = 20;
@@ -52,5 +52,6 @@ im_corr_st = atImage(heart, at_corr_st, limits, numSteps, angles, sprintf('Corr 
 blank = repmat(uint8(255), size(im_true));
 im = [im_true im_defl_t im_defl_st im_stepFun; blank im_corr_t im_corr_st blank];
 
+figure;
 imshow(im);
-imwrite(im, sprintf('example_recWithoutScar_sigma%i.png', sigma));
+imwrite(im, sprintf('results/example_recWithoutScar_sigma%i.png', sigma));

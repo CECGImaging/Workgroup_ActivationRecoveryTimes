@@ -15,16 +15,22 @@ function at = at_unified(X, varargin)
 %
 %                 NAME-VALUE PAIRS:
 %
-%   'upsampling': Temporal upsampling factor.
+%   'upsampling': Factor for temporal upsampling (linear interpolation).
+%                 Upsampling is particularly important to capture small
+%                 time shifts between signals in integer-type delay values
+%                 obtained using cross-correlation.
+%                 Default: 10
 %
 %   'derivative': Type of derivative to be used:
 %                 't':  temporal,
 %                 's':  spatial,
 %                 'st': spatiotemporal.
+%                 Default: 't'
 %
 %        'sigma': Std. dev. in samples used for temporal Gaussian filtering
 %                 (zero-phase, 2nd order).
 %                 Temporal filtering only affects the temporal derivative.
+%                 Default: 20
 %
 %   'stepFunLen': One-sided length of the step function that is correlated
 %                 with the time signal to obtain the temporal derivative
@@ -32,10 +38,12 @@ function at = at_unified(X, varargin)
 %                 The step function represents a template for TMVs
 %                 during depolarization.
 %                 stepFunLen == 1 yields the central finite difference
-%                 approximation of the first order dervivative.
+%                 approximation of the first order derivative.
+%                 Default: 1
 %
 %       'lambda': Parameter for spatial Laplacian smoothing.
 %                 Spatial smoothing only affects the spatial derivative.
+%                 Default: 1e2
 %
 %        'power': Power used for exponentiation of the derivative signal
 %                 after normalization to a maximum value of 1.
@@ -46,22 +54,30 @@ function at = at_unified(X, varargin)
 %                                  emphasis on the intrinsic deflection.
 %                 power == inf:    Purely deflection-based method
 %                                  (no node pairs needed).
+%                 Default: 1
 %
 %         'mesh': Mesh struct in the format of the vtkToolbox.
+%                 Mandatory fields:
+%                 mesh.points: [numPoints x 3] coordinates list,
+%                 mesh.cells:  [numCells x 3] connectivity list.
 %                 Can be omitted for power == inf AND derivative == 't'.
 %
 %        'pairs': Node pairs [numPairs x 2] used for cross-correlation.
 %
 % 'nodePairDist': Distance in number of edges for defining node pairs,
 %                 if not directly provided via 'pairs'.
+%                 Default: 2
 %
 %   'regression': Type of regression used to fit ATs to inter-node delays:
 %                 'lad': least absolute deviations,
 %                 'ls':  least squares.
+%                 Default: 'lad'
 %
 %          'tol': Tolerance for iterative solver (linprog or lsqr).
+%                 Default: 1e-8
 %
 %        'maxit': Maximum number of iterations.
+%                 Default: 1000
 %
 % OUTPUT:
 %             at: ATs in samples (1-based indexing) [numNodes x 1]
