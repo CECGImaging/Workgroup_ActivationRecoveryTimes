@@ -26,6 +26,14 @@ end
 
 [logRho,logEta,lambda,curvature] = tikhonovLcurve_sample(B, A, R, zeroMeanNullspaceRemoval, limits, numSamples, smoothingParam);
 
+if nargin == 8
+    rho = 10.^logRho;
+    eta = 10.^logEta;
+    loglog(ax, rho, eta, 'k')
+    hold on
+    drawnow
+end
+
 curvature(curvature<0) = 0;
 curvature = curvature/max(curvature);
 startInd = find(curvature>0.5, 1, 'first');
@@ -38,14 +46,9 @@ subLimits = log10([lambda(startInd) lambda(endInd)]);
 [~,cornerInd] = max(subCurvature);
 cornerLambda = subLambda(cornerInd);
 
-rho = 10.^logRho;
-eta = 10.^logEta;
-subRho = 10.^subLogRho;
-subEta = 10.^subLogEta;
-
 if nargin == 8
-    loglog(ax, rho, eta, 'k')
-    hold on
+    subRho = 10.^subLogRho;
+    subEta = 10.^subLogEta;
     loglog(ax, subRho, subEta, 'r')
     loglog(ax, subRho(cornerInd), subEta(cornerInd), 'bx')
     title(ax, sprintf('L-curve lambda = %.2e', cornerLambda))
