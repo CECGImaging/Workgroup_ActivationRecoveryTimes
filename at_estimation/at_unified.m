@@ -1,7 +1,7 @@
 function at = at_unified(X, varargin)
 
 % Estimate activation times (AT) from transmembrane voltages (TMV) or 
-% extracellular potentials (EP).
+% inverted extracellular potentials (EP).
 % Depending on the input, AT estimation is based on detecting the
 % intrinsic deflection of a derivative signal (power == inf)
 % or on fitting ATs to inter-node delays obtained using
@@ -11,7 +11,7 @@ function at = at_unified(X, varargin)
 %
 % INPUTS:
 %              X: TMVs or EPs [numNodes x numTimesteps].
-%                 The positive slope is detected, so EPs must be inverted.
+%                 EPs must be inverted, as the positive slope is detected.
 %
 %                 NAME-VALUE PAIRS:
 %
@@ -68,6 +68,12 @@ function at = at_unified(X, varargin)
 %                 if not directly provided via 'pairs'.
 %                 Default: 2
 %
+%     'badLeads': Indices of nodes [numBadLeads x 1] to be ignored for the
+%                 correlation-based method (they are removed from pairs).
+%                 NaN will be assigned as AT for these nodes.
+%                 Note that the spatial derivative will still be influenced
+%                 by these nodes.
+%
 %   'regression': Type of regression used to fit ATs to inter-node delays:
 %                 'lad': least absolute deviations,
 %                 'ls':  least squares.
@@ -99,6 +105,7 @@ addParameter(p, 'power', 1);
 addParameter(p, 'mesh', []);
 addParameter(p, 'pairs', []);
 addParameter(p, 'nodePairDist', 2);
+addParameter(p, 'badLeads', []);
 addParameter(p, 'regression', 'lad');
 addParameter(p, 'tol', 1e-8);
 addParameter(p, 'maxit', 1000);
@@ -156,6 +163,10 @@ else
     else
         pairs = p.pairs;
     end
+    if ~isempty(p.badLeads)
+        [badPairs,~] = ind2sub(size(pairs), find(ismember(pairs, p.badLeads)));
+        pairs(badPairs,:) = [];
+    end
     
     % Compute delays
     delays = NaN(size(pairs,1),1);
@@ -191,9 +202,12 @@ else
 
     % Determine constant offset of activation times from mean of aligned signals
     derivSigAligned = delayseq(derivSig', -at);
+    derivSigAligned(:,p.badLeads) = [];
     [~,offset] = max(mean(derivSigAligned,2));
     at = (at+offset-1)/p.upsampling+1;
 end
+
+at(p.badLeads) = nan;
 
 end
 
