@@ -1,7 +1,7 @@
 function im = atImage(vtk, at, limits, numSteps, angles, txt)
 
 res = 500; % resolution
-s = 4;     % scale factor, influences the thickness of contour lines
+s = 2;     % scale factor, influences the thickness of contour lines
 h = figure;
 set(h, 'Visible','off', 'Position',[0 0 s*res s*res], 'color','w');
 visualizeDataOnMesh(vtk, at, limits, numSteps, angles);
@@ -10,8 +10,8 @@ im = cropWhiteBackground(im.cdata);
 g = uint8(~(sum(abs(gradient(double(im))),3)~=0));
 im = im.*g;
 if nargin > 5
-    im = [repmat(uint8(255), round(s*res/16), size(im,2), size(im,3)); im];
-    im = insertText(im, [size(im,2)/2 s*res/15], txt, 'FontSize',round(s*res/31), 'BoxOpacity',0.0, 'AnchorPoint','CenterBottom');
+    im = [repmat(uint8(255), round(s*res/8), size(im,2), size(im,3)); im];
+    im = insertText(im, [size(im,2)/2 s*res/7.5], txt, 'FontSize',round(s*res/15.5), 'BoxOpacity',0.0, 'AnchorPoint','CenterBottom');
 end
 im = imresize(im, 1/s);
 close(h);

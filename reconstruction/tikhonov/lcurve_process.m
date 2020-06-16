@@ -26,15 +26,18 @@ if nargin > 4 && ~isempty(ax1)
     k = round(linspace(1, numel(lambdas), 10));
     loglog(ax1, rho, eta, 'b', rho, etaSmoothed, 'r', rho(k), etaSmoothed(k), 'k.', 'MarkerSize',10);
     text(ax1, rho(k), etaSmoothed(k), sprintfc(' %.2e', lambdas(k)));
+    xlabel(ax1, 'Residual norm'); ylabel(ax1, 'Solution norm'); title(ax1, 'L-curve');
 end
 if nargin > 5 && ~isempty(ax2)
     [~,k] = findpeaks(curvature);
     semilogx(ax2, rho, curvature, 'r', rho(k), curvature(k), 'k.', 'MarkerSize',10);
     text(ax2, rho(k), curvature(k), sprintfc(' %.2e', lambdas(k)));
+    xlabel(ax2, 'Residual norm'); ylabel(ax2, 'Curvature'); title(ax2, 'Curvature');
 end
 if nargin > 6 && ~isempty(ax3)
     semilogx(ax3, rho, dcurvature, 'r', rho(optInd), dcurvature(optInd), 'k.', 'MarkerSize',10);
     text(ax3, rho(optInd), dcurvature(optInd), sprintfc(' %.2e', optLambda));
+    xlabel(ax3, 'Residual norm'); ylabel(ax3, 'Derivative of curvature'); title(ax3, 'Derivative of curvature');
 end
 
 end
